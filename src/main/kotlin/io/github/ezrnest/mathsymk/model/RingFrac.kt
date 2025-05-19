@@ -95,6 +95,16 @@ internal constructor(val nume: T, val deno: T) {
             return RFracOverIntDom(model)
         }
 
+        /**
+         * Creates a fraction field model over an integral domain.
+         *
+         * @see [over]
+         */
+        context(model : IntegralDomain<T>)
+        fun <T> fractionField() : RFracOverIntDom<T> {
+            return RFracOverIntDom(model)
+        }
+
     }
 }
 

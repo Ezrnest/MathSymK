@@ -2,6 +2,7 @@ package io.github.ezrnest.mathsymk.model
 
 import io.github.ezrnest.mathsymk.linear.Matrix
 import io.github.ezrnest.mathsymk.linear.MutableMatrix
+import io.github.ezrnest.mathsymk.model.PolyOverRing.Companion.mapTermsPossiblyZero
 import io.github.ezrnest.mathsymk.structure.*
 import io.github.ezrnest.mathsymk.util.DataStructureUtil
 import java.util.Comparator
@@ -117,6 +118,15 @@ data class Polynomial<T> internal constructor(
         return mapTermsNonZeroT { PTerm(it.pow, transform(it.value)) }
     }
 
+    /*
+    Context-parameter methods
+     */
+
+    context(model: Ring<T>)
+    operator fun times(k: T): Polynomial<T> {
+        return mapTermsPossiblyZero(this.terms, model) { model.multiply(it, k) }
+    }
+
 
     companion object {
 
@@ -217,6 +227,29 @@ data class Polynomial<T> internal constructor(
          */
         fun <T> over(model: Field<T>): PolyOverField<T> {
             return PolyOverField(model)
+        }
+
+
+        private fun <T> add2Term(a: PTerm<T>, b: PTerm<T>, model: AddMonoid<T>): PTerm<T>? {
+            val r = model.add(a.value, b.value)
+            return if (model.isZero(r)) null else PTerm(a.pow, r)
+        }
+
+        /*
+        Add, negate, multiply
+         */
+        internal fun <T> sum(a: Polynomial<T>, b: Polynomial<T>, model: AddMonoid<T>): Polynomial<T> {
+            if (a.isZero) return b
+            if (b.isZero) return a
+            val result = DataStructureUtil.mergeSorted2(
+                a.terms, b.terms, comparator = Comparator.naturalOrder()
+            ) { t1, t2 -> add2Term(t1, t2, model) }
+            return Polynomial(result)
+        }
+
+        internal fun <T> negate(a: Polynomial<T>, model: AddGroup<T>): Polynomial<T> {
+            if (a.isZero) return a
+            return a.mapTermsNonZero { model.negate(it) }
         }
 
 
@@ -507,12 +540,7 @@ open class PolyOverRing<T>(protected val modelRing: Ring<T>) :
 
 
     final override fun add(x: Polynomial<T>, y: Polynomial<T>): Polynomial<T> {
-        val result = DataStructureUtil.mergeSorted2(
-            x.terms, y.terms,
-            comparator = Comparator.naturalOrder(),
-            merger2 = ::add2Term,
-        )
-        return Polynomial(result)
+        return Polynomial.sum(x, y, model)
     }
 
     final override fun sumOf(elements: List<Polynomial<T>>): Polynomial<T> {

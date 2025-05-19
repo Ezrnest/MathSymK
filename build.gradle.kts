@@ -1,5 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
+
 plugins {
-    kotlin("jvm") version "2.0.20"
+    kotlin("jvm") version "2.2.0-RC"
     `maven-publish`
     signing
 }
@@ -43,7 +45,8 @@ java {
 kotlin {
     jvmToolchain(21)
     compilerOptions{
-        freeCompilerArgs.add("-Xjvm-default=all")
+        jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
+        freeCompilerArgs.add("-Xcontext-parameters")
     }
 }
 
