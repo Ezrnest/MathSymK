@@ -49,8 +49,30 @@ interface ExprCal {
 
     fun getDefinition(symbol: ESymbol): SymbolDefinition?
 
+    /**
+     * Traverses an expression tree together with the effective context at each node.
+     *
+     * Child contexts are produced by [enterContext]. This makes it possible to handle
+     * qualifier nodes (for example summation/quantifier nodes) where some symbols become
+     * locally bound.
+     *
+     * @param depth max recursive depth; `0` means only visit [root].
+     */
     fun traverseCtx(root: Node, context: EContext, depth: Int = Int.MAX_VALUE, action: (Node, EContext) -> Unit) {
-        TODO()
+        action(root, context)
+        if (depth <= 0) return
+        if (root !is NodeChilded) return
+        val childContexts = enterContext(root, context)
+        val children = root.children
+        if (childContexts.size != children.size) {
+            children.forEach { child ->
+                traverseCtx(child, context, depth - 1, action)
+            }
+            return
+        }
+        children.indices.forEach { i ->
+            traverseCtx(children[i], childContexts[i], depth - 1, action)
+        }
     }
 
     fun directEquals(node1: Node, node2: Node): Boolean {
@@ -116,8 +138,19 @@ interface ExprCal {
 //    }
 
 
+    /**
+     * Returns free symbol variables of [node] under the calculator [context].
+     *
+     * Symbols marked as qualified in the current local context are excluded.
+     */
     fun variablesOf(node: Node): Set<NSymbol> {
-        TODO()
+        val vars = linkedSetOf<NSymbol>()
+        traverseCtx(node, context) { cur, ctx ->
+            if (cur is NSymbol && cur.symbol !in ctx.qualifiedSymbols) {
+                vars.add(cur)
+            }
+        }
+        return vars
     }
 
     fun reduce(root: Node, depth: Int = Int.MAX_VALUE): Node {
@@ -585,5 +618,3 @@ open class BasicExprCal : ExprCal, NodeScopePredefinedSymbols {
         return results.map { it.item }
     }
 }
-
-

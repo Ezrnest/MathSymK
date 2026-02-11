@@ -62,6 +62,7 @@ class AlgReduceTest {
         val x = NSymbol(ESymbol("x"))
 
         val sinPi6 = cal.reduce(alg { sin(rational(1, 6) * π) })
+        // cos special-angle rule currently matches rational * π form directly.
         val cosPi3 = cal.reduce(alg { cos(rational(1, 3) * π) })
         val tanPi2 = cal.reduce(alg { tan(rational(1, 2) * π) })
         val identity = cal.reduce(alg { pow(sin(x), 2.e) + pow(cos(x), 2.e) })

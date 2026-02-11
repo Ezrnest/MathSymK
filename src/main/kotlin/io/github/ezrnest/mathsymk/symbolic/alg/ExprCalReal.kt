@@ -4,6 +4,7 @@ import io.github.ezrnest.mathsymk.structure.Reals
 import io.github.ezrnest.mathsymk.symbolic.BasicExprCal
 import io.github.ezrnest.mathsymk.symbolic.ExprCal
 import io.github.ezrnest.mathsymk.symbolic.Node
+import io.github.ezrnest.mathsymk.symbolic.NodeOrder
 
 
 class ExprCalReal : BasicExprCal(), Reals<Node>, SymAlg {
@@ -42,8 +43,15 @@ class ExprCalReal : BasicExprCal(), Reals<Node>, SymAlg {
 
     override fun contains(x: Node): Boolean = true // TODO
 
+    /**
+     * Structural equality after one full symbolic reduction on each side.
+     *
+     * This is intentionally symbolic (not numeric approximation based).
+     */
     override fun isEqual(x: Node, y: Node): Boolean {
-        TODO("Not yet implemented")
+        val rx = reduce(x)
+        val ry = reduce(y)
+        return directEquals(rx, ry)
     }
 
     override fun negate(x: Node): Node {
@@ -163,7 +171,15 @@ class ExprCalReal : BasicExprCal(), Reals<Node>, SymAlg {
         TODO()
     }
 
+    /**
+     * Canonical ordering after reduction.
+     *
+     * Returns `0` for symbolically equal nodes; otherwise delegates to [NodeOrder].
+     */
     override fun compare(o1: Node, o2: Node): Int {
-        TODO("Not yet implemented")
+        val r1 = reduce(o1)
+        val r2 = reduce(o2)
+        if (directEquals(r1, r2)) return 0
+        return NodeOrder.compare(r1, r2)
     }
 }
