@@ -87,3 +87,42 @@ Do not commit real secrets.
 - Generic algebraic abstractions in `structure`/`model`: type constraints and operator overload consistency.
 
 When modifying these areas, add or adjust tests in the corresponding package.
+
+## 9. Symbolic Development Notes (Current)
+
+### 9.1 Existing Symbolic Test Coverage Added
+
+Symbolic-related tests now include:
+- `src/test/kotlin/symbolic/NodeTest.kt`
+  - Node symbol mapping behavior (`Node1/Node2/Node3.mapSymbol`).
+- `src/test/kotlin/symbolic/MatcherTest.kt`
+  - Reference binding consistency for repeated matcher refs.
+- `src/test/kotlin/symbolic/RuleSetDSLTest.kt`
+  - DSL validation for unbound references in rule results.
+  - No-op rule (`x -> x`) should not be registered.
+- `src/test/kotlin/symbolic/TreeDispatcherTest.kt`
+  - Wildcard/fixed/branch dispatch basics and early-stop behavior.
+- `src/test/kotlin/symbolic/AlgReduceTest.kt`
+  - Core algebraic reduction smoke tests for `ComputePow`, trig special angles, and product merge.
+
+### 9.2 Known Behavioral Sensitivities
+
+- `symbolic/Node.kt`: `mapSymbol` correctness is critical (node symbol + child symbol mapping).
+- `symbolic/SimRuleDSL.kt`: rule target/result reference consistency must be enforced.
+- `symbolic/TreeDispatcher.kt`: dispatch semantics differ by matcher category (wildcard/fixed/branch).
+
+### 9.3 Testing Policy for Underspecified Symbolic Semantics
+
+When semantics are not finalized (example: `0^0`), do not lock tests to current behavior.
+- Prefer asserting stable identities only (e.g., `0^positive -> 0`).
+- Leave explicitly underspecified cases unconstrained, with a short comment in test code.
+- If product/design decisions later define those semantics, add strict assertions then.
+
+### 9.4 Practical Workflow for Symbolic Changes
+
+1. Add/adjust focused symbolic tests first.
+2. Run targeted symbolic tests:
+   - `sh gradlew test --tests 'symbolic.*'`
+3. Then run full suite:
+   - `sh gradlew test`
+4. If a test reveals a real bug, prefer a minimal fix and keep regression coverage.
