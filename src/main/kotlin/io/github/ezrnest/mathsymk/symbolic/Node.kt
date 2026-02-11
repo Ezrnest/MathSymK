@@ -355,7 +355,7 @@ data class Node1T<out C : Node>(override val symbol: ESymbol, val child: C) : Ab
         val newChild = child.mapSymbol(mapping)
         val newSymbol = mapping(symbol)
         if (newSymbol == symbol && newChild === child) return this
-        return Node1T(symbol, newChild)
+        return Node1T(newSymbol, newChild)
     }
 
     override fun mapSymbolNode(mapping: (ESymbol) -> Node?): Node {
@@ -437,7 +437,7 @@ data class Node2T<C1 : Node, C2 : Node>(
         val new2 = second.mapSymbol(mapping)
         val newSymbol = mapping(symbol)
         if (newSymbol == symbol && new1 === first && new2 === second) return this
-        return Node2T(symbol, new1, new2)
+        return Node2T(newSymbol, new1, new2)
     }
 
     override fun mapSymbolNode(mapping: (ESymbol) -> Node?): Node {
@@ -515,7 +515,7 @@ data class Node3T<out C1 : Node, out C2 : Node, out C3 : Node>(
         val new3 = third.mapSymbol(mapping)
         val newSymbol = mapping(symbol)
         if (newSymbol == symbol && new1 === first && new2 === second && new3 === third) return this
-        return Node3T(symbol, new1, new2, new3)
+        return Node3T(newSymbol, new1, new2, new3)
     }
 
     override fun mapSymbolNode(mapping: (ESymbol) -> Node?): Node {
@@ -613,4 +613,3 @@ data class NodeN(
         return SymBasic.eval(newSymbol, newChildren)
     }
 }
-
