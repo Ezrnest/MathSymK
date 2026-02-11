@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.0.20"
+    kotlin("jvm") version "2.3.10"
     `maven-publish`
     signing
 }
@@ -98,4 +98,3 @@ publishing {
 //    )
 //    sign(publishing.publications["mavenJava"])
 //}
-
