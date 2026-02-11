@@ -62,8 +62,8 @@ open class ComplexOverURingStd<T>(_model: UnitRing<T>) : ComplexOverURing<T, Com
     final override val one: Complex<T>
         get() = Complex(scalars.one, scalars.zero)
 
-    override fun complexOf(a: T, b: T): Complex<T> {
-        return Complex(a, b)
+    override fun complexOf(re: T, im: T): Complex<T> {
+        return Complex(re, im)
     }
 
     override fun ofReal(a: T): Complex<T> {

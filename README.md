@@ -52,7 +52,7 @@ maven { url = uri("https://jitpack.io") }
 * Add the dependency to your module's `build.gradle.kts` file:
 
 ```kotlin
-implementation("com.github.ezrnest:mathsymk:v0.0.1")
+implementation("com.github.ezrnest:mathsymk:v0.0.2")
 ```
 #### Maven:
 * Add the following to your `pom.xml` file:
@@ -71,7 +71,7 @@ implementation("com.github.ezrnest:mathsymk:v0.0.1")
 <dependency>
     <groupId>com.github.ezrnest</groupId>
     <artifactId>mathsymk</artifactId>
-    <version>v0.0.1</version>
+    <version>v0.0.2</version>
 </dependency>
 ```
 
@@ -229,6 +229,10 @@ with(Tensor.over(Models.ints())) {
 
 # Features
 
+## Stability
+
+Current module stability levels and known unimplemented runtime paths are documented in:
+- `docs/API_STABILITY.md`
 
 
 ## Number Models
