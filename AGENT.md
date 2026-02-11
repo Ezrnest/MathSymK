@@ -8,7 +8,7 @@ This document is a quick operational guide for contributors and coding agents wo
 - Type: Kotlin/JVM library for symbolic math and algebraic structures
 - Build system: Gradle Kotlin DSL (single module)
 - Group/Version: `io.github.ezrnest` / `0.0.2`
-- Java toolchain: 21
+- Java toolchain: 25
 - Kotlin plugin: 2.3.10
 - Gradle wrapper: 9.1.0
 
@@ -68,7 +68,7 @@ Do not commit real secrets.
 
 ## 6. Current Development Context
 
-- README still shows install example `v0.0.1`, while build version is `0.0.2`.
+- Build is currently configured for Java toolchain 25.
 - Gradle/Kotlin have been upgraded in build scripts (Kotlin 2.3.10, Gradle 9.1.0).
 - If future dependency upgrades are done, re-run full tests before release.
 

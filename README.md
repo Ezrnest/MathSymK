@@ -43,6 +43,8 @@ Currently, it includes
 Currently, we provide the library through JitPack.
 To use this library, you need to add the following to your build file.
 
+Build-from-source requirement: JDK 25 (toolchain 25).
+
 #### Gradle (Kotlin DSL):
 * Add the following to your root `build.gradle.kts` file at the end of the repositories section:
 

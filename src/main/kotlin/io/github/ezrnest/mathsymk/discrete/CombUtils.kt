@@ -52,6 +52,27 @@ object CombUtils {
         throw NumberValueException("Too big")
     }
 
+    private fun combinationBExact(n: Int, m: Int): BigInteger {
+        if (m == 0) {
+            return BigInteger.ONE
+        }
+        if (m == 1) {
+            return BigInteger.valueOf(n.toLong())
+        }
+        val t = n - m
+        if (t < 0) {
+            throw ArithmeticException("n<m")
+        }
+        val k = if (t < m) t else m
+        var result = BigInteger.ONE
+        for (i in 1..k) {
+            val numer = BigInteger.valueOf((n - k + i).toLong())
+            val denom = BigInteger.valueOf(i.toLong())
+            result = result.multiply(numer).divide(denom)
+        }
+        return result
+    }
+
     /**
      * Returns the factorial of n.
      * <pre>n!</pre>
@@ -272,8 +293,7 @@ object CombUtils {
         return try {
             permutation(n, m) / factorial(m)
         } catch (ae: ArithmeticException) {
-//            combinationDeg(n, m, t)
-            TODO()
+            combinationBExact(n, m).longValueExact()
         }
     }
 
@@ -328,7 +348,7 @@ object CombUtils {
             return BigInteger.ZERO
         }
 //        return combinationB(n, k)
-        TODO()
+        return combinationBExact(n, k)
     }
 
     /**
@@ -382,7 +402,13 @@ object CombUtils {
      */
     fun multinomialB(p: Int, vararg ns: Int): BigInteger {
         checkSumArray(p, ns.sum(), ns)
-        TODO()
+        var remaining = p
+        var result = BigInteger.ONE
+        for (n in ns) {
+            result = result.multiply(combinationBExact(remaining, n))
+            remaining -= n
+        }
+        return result
 //        val pr: Primes = Primes.getInstance()
 //        pr.enlargePrime(p)
 //        val len: Int = pr.getCount(p)
@@ -425,8 +451,7 @@ object CombUtils {
      */
     fun multisetNumberB(n: Int, k: Int): BigInteger {
         require(!(n < 0 || k < 0))
-        TODO()
-//        return combinationB(n + k - 1, k)
+        return combinationBExact(n + k - 1, k)
     }
 
     /**

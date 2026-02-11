@@ -18,7 +18,7 @@ This document defines the current stability level of MathSymK modules and lists 
   - Some advanced/optimization paths are marked TODO (non-blocking for common use).
 - `discrete`: Beta
   - Permutation and core combinatorics are available.
-  - Several combinatorics branches still use runtime `TODO()`.
+  - Some advanced combinatorics areas are still evolving.
 - `numTh`: Stable (current scope)
   - Core number-theory utilities are present and tested.
 - `structure`: Stable (interface layer)
@@ -40,10 +40,6 @@ The following locations currently contain executable `TODO()`/`TODO("Not yet imp
 - `src/main/kotlin/io/github/ezrnest/mathsymk/model/Models.kt:604`
 - `src/main/kotlin/io/github/ezrnest/mathsymk/model/Models.kt:608`
 - `src/main/kotlin/io/github/ezrnest/mathsymk/model/Multinomial.kt:590`
-- `src/main/kotlin/io/github/ezrnest/mathsymk/discrete/CombUtils.kt:276`
-- `src/main/kotlin/io/github/ezrnest/mathsymk/discrete/CombUtils.kt:331`
-- `src/main/kotlin/io/github/ezrnest/mathsymk/discrete/CombUtils.kt:385`
-- `src/main/kotlin/io/github/ezrnest/mathsymk/discrete/CombUtils.kt:428`
 - `src/main/kotlin/io/github/ezrnest/mathsymk/symbolic/SimRuleDSL.kt:177`
 - `src/main/kotlin/io/github/ezrnest/mathsymk/symbolic/ExprCal.kt:53`
 - `src/main/kotlin/io/github/ezrnest/mathsymk/symbolic/ExprCal.kt:120`
