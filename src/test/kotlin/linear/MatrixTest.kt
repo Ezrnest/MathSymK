@@ -17,6 +17,38 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class MatrixTest {
+
+    @Test
+    fun fromColumnsKeepsColumnMajorPlacement() {
+        val columns = List(3) { col ->
+            Vector(3) { row -> 10 * col + row }
+        }
+        val matrix = Matrix.fromColumns(columns)
+
+        for (row in 0 until matrix.row) {
+            for (col in 0 until matrix.column) {
+                assertEquals(columns[col][row], matrix[row, col])
+            }
+        }
+    }
+
+    @Test
+    fun fromColumnsKeepsColumnMajorPlacementForRectangularMatrix() {
+        val columns = List(3) { col ->
+            Vector(2) { row -> 10 * col + row }
+        }
+        val matrix = Matrix.fromColumns(columns)
+
+        assertEquals(2, matrix.row)
+        assertEquals(3, matrix.column)
+        for (row in 0 until matrix.row) {
+            for (col in 0 until matrix.column) {
+                assertEquals(columns[col][row], matrix[row, col])
+            }
+        }
+    }
+
+
     val Z = Models.ints()
     val Zmod7 = Models.intModP(7)
     val Zmod97 = Models.intModP(97)

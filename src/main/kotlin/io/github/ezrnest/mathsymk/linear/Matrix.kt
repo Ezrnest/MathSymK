@@ -252,7 +252,7 @@ interface Matrix<T> : GenTuple<T> {
             val row = columns.first().size
             val column = columns.size
             require(columns.all { it.size == row })
-            return Matrix(row, column) { i, j -> columns[i][j] }
+            return Matrix(row, column) { i, j -> columns[j][i] }
         }
 
         /**
