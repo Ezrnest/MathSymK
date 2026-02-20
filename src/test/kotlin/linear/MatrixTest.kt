@@ -309,6 +309,36 @@ class MatrixTest {
     }
 
     @Test
+    fun decompPLUOfSquareMatrix() {
+        with(matZmod97) {
+            val rng = Random(13)
+            val n = 5
+            val A = Matrix(n) { _, _ -> rng.nextInt(97) }
+            val result = A.decompPLU()
+            assertEquals(result.P * A, result.L * result.U)
+            assertEquals(result.rank, result.pivots.size)
+        }
+    }
+
+    @Test
+    fun decompPLUHandlesZeroLeadingPivotByRowSwap() {
+        with(matZmod7) {
+            val A = Matrix.of(
+                3,
+                3,
+                0, 1, 2,
+                1, 2, 3,
+                2, 4, 1
+            )
+            val result = A.decompPLU()
+            assertEquals(result.P * A, result.L * result.U)
+            // a row swap should have happened, so P is not identity
+            assertTrue(result.P != eye(3))
+            assertEquals(3, result.rank)
+        }
+    }
+
+    @Test
     fun decompRankOfFullRankMatrix() {
         with(matZmod97) {
             val A = Matrix(3, 3) { i, j -> if (i == j) 1 else 0 }

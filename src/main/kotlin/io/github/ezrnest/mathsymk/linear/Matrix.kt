@@ -438,6 +438,30 @@ interface Matrix<T> : GenTuple<T> {
 }
 
 /**
+ * Result of a PLU decomposition:
+ *
+ * ```
+ * P * A = L * U
+ * ```
+ *
+ * where
+ * - [P] is a permutation matrix,
+ * - [L] is lower triangular with unit diagonal,
+ * - [U] is upper triangular.
+ *
+ * [pivots] stores the pivot column indices and [rank] is its size.
+ */
+data class PLUDecompositionResult<T>(
+    val P: Matrix<T>,
+    val L: Matrix<T>,
+    val U: Matrix<T>,
+    val pivots: List<Int>,
+) {
+    val rank: Int
+        get() = pivots.size
+}
+
+/**
  * Determines whether this matrix is the same shape as [y].
  */
 fun Matrix<*>.shapeMatches(y: Matrix<*>): Boolean {
@@ -1379,6 +1403,19 @@ interface MatOverField<T> : Algebra<T, Matrix<T>>, MatOverEUD<T> {
      */
     fun Matrix<T>.decompLU(): Pair<Matrix<T>, Matrix<T>> {
         return MatrixImpl.decompLU(this, model)
+    }
+
+    /**
+     * Returns the PLU decomposition of this matrix:
+     *
+     * ```
+     * P * A = L * U
+     * ```
+     *
+     * where `P` is a permutation matrix, `L` is unit lower triangular and `U` is upper triangular.
+     */
+    fun Matrix<T>.decompPLU(): PLUDecompositionResult<T> {
+        return MatrixImpl.decompPLU(this, model)
     }
 
     /**
