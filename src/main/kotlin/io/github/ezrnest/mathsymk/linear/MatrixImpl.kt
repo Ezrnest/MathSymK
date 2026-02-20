@@ -1246,6 +1246,50 @@ object MatrixImpl {
 
 
     /**
+     * Computes the PLU decomposition of a square matrix `A`, returning `(P, L, U)` such that
+     *
+     * ```
+     * P * A = L * U
+     * ```
+     *
+     * where `P` is a permutation matrix, `L` is lower triangular with unit diagonal, and `U` is upper triangular.
+     */
+    fun <T> decompPLU(m: Matrix<T>, mc: Field<T>): PLUDecompositionResult<T> {
+        require(m.isSquare) {
+            "The matrix must be square!"
+        }
+        val n = m.row
+        val upper = AMatrix.copyOf(m)
+        val lower = zero(n, n, mc)
+        val permutation = identity(n, mc)
+        val pivots = mutableListOf<Int>()
+
+        for (k in 0 until n) {
+            val pivotRow = (k until n).firstOrNull { !mc.isZero(upper[it, k]) } ?: continue
+
+            if (pivotRow != k) {
+                upper.swapRow(k, pivotRow)
+                permutation.swapRow(k, pivotRow)
+                if (k > 0) {
+                    lower.swapRow(k, pivotRow, 0, k)
+                }
+            }
+
+            lower[k, k] = mc.one
+            pivots += k
+            for (i in (k + 1) until n) {
+                val lambda = mc.eval {
+                    upper[i, k] / upper[k, k]
+                }
+                lower[i, k] = lambda
+                upper[i, k] = mc.zero
+                upper.mulAddRow(k, i, mc.negate(lambda), k + 1, model = mc)
+            }
+        }
+        return PLUDecompositionResult(permutation, lower, upper, pivots)
+    }
+
+    /**
      * Computes the LU decomposition of the given matrix `A` , returns a pair of matrices `(L,U)` such that
      * `A = LU`, where `L` is lower triangular with `1` as diagonal elements and `U` is upper triangular.
      *
