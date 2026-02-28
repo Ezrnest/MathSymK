@@ -7,6 +7,12 @@ plugins {
 group = "io.github.ezrnest"
 version = "0.0.2"
 
+
+val javaToolchainVersion = providers.gradleProperty("javaToolchainVersion")
+    .map(String::toInt)
+    .orElse(21)
+    .get()
+
 repositories {
     maven {
         url = uri("https://maven.aliyun.com/repository/public/")
@@ -34,14 +40,14 @@ tasks.test {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
+        languageVersion.set(JavaLanguageVersion.of(javaToolchainVersion))
     }
     withJavadocJar()
     withSourcesJar()
 }
 
 kotlin {
-    jvmToolchain(25)
+    jvmToolchain(javaToolchainVersion)
     compilerOptions{
         freeCompilerArgs.add("-jvm-default=no-compatibility")
     }
